@@ -1,0 +1,8 @@
+{
+  "name": "group-hangman-online",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Multiplayer group hangman - each player uses their own device",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}

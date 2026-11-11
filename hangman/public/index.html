@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Break Room Hangman</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="top">
+  <div id="brand">
+    <h1>☕ Break Room Hangman</h1>
+  </div>
+  <div id="top-right">
+    <button id="mute-btn" class="btn small purple">🔊 Sound on</button>
+    <button id="restart-btn" class="btn small red hidden">Restart Game</button>
+    <div id="sap-wrap">
+      <a id="sap-link" href="https://www.sap.com/products/technology-platform/integration-suite.html" target="_blank" rel="noopener">Saviour</a>
+      <div id="click-note">👆 Click me!</div>
+    </div>
+  </div>
+</header>
+
+<!-- JOIN -->
+<main id="screen-join" class="note yellow">
+  <h2>Who are you?</h2>
+  <p class="hint">Tap your name, then press Join.</p>
+  <div id="pick-grid"></div>
+  <p class="hint">Not in the list? Enter your name:</p>
+  <div class="nametag">
+    <div class="nt-top">HELLO<small>my name is</small></div>
+    <input id="name-input" type="text" maxlength="12" autocomplete="off" placeholder="Type your name">
+  </div>
+  <p id="join-error" class="error"></p>
+  <button id="join-btn" class="btn big green">Join the Break Room</button>
+</main>
+
+<div id="play-area" class="hidden">
+  <section id="main-col">
+    <div id="notice" class="notice hidden"></div>
+    <div id="game-actions" class="hidden"><button id="end-btn" class="btn big red">⛔ END GAME</button></div>
+
+    <!-- LOBBY -->
+    <div id="screen-lobby" class="note yellow hidden">
+      <h2>☕ The Break Room</h2>
+      <p class="hint">Share the link with your office mates. Need at least 2 players.</p>
+      <div id="lobby-players"></div>
+      <button id="start-btn" class="btn big green hidden">Start Game</button>
+      <p id="lobby-wait" class="hint"></p>
+    </div>
+
+    <!-- FINAL LEADERBOARD -->
+    <div id="screen-final" class="note yellow hidden">
+      <h2 id="final-title"></h2>
+      <div id="winner-stage" class="hidden"></div>
+      <p id="final-treat" class="treat"></p>
+      <ol id="final-board"></ol>
+      <p id="final-totals" class="totals"></p>
+      <div id="productive-sign"></div>
+      <button id="newgame-btn" class="btn big green hidden">🔄 PLAY AGAIN</button>
+          </div>
+
+    <!-- SETUP -->
+    <div id="screen-setup" class="note pink hidden">
+      <div id="setup-giver">
+        <h2>🎤 You are the Word Giver!</h2>
+        <p class="hint">Type a secret word (letters only, 2 to 15). Hide your screen from nosy colleagues!</p>
+        <input id="secret-input" class="big-input" type="password" maxlength="15" autocomplete="off" placeholder="Secret word">
+        <label class="show-label"><input type="checkbox" id="show-word"> Show what I'm typing</label>
+        <p id="setup-error" class="error"></p>
+        <button id="reveal-btn" class="btn big orange">Reveal Vowels &amp; Start</button>
+      </div>
+      <div id="setup-wait">
+        <h2>🎤 <span id="wait-name" class="mark"></span> is the Word Giver</h2>
+        <p class="hint">Thinking of a word... probably something about Excel.</p>
+      </div>
+    </div>
+
+    <!-- GAME + RESULT -->
+    <div id="screen-game" class="board hidden">
+      <div id="turn-banner"></div>
+      <div id="last-guess" class="hidden"></div>
+      <div id="game-top">
+        <svg id="hangman" viewBox="0 0 220 230" width="210" height="220">
+          <line x1="20" y1="215" x2="150" y2="215" class="gallows" pathLength="1"/>
+          <line x1="55" y1="215" x2="55" y2="20" class="gallows" pathLength="1"/>
+          <line x1="55" y1="20" x2="140" y2="20" class="gallows" pathLength="1"/>
+          <line x1="140" y1="20" x2="140" y2="48" class="gallows" pathLength="1"/>
+          <circle id="part1" cx="140" cy="68" r="20" class="part hidden" pathLength="1"/>
+          <line id="part2" x1="140" y1="88" x2="140" y2="145" class="part hidden" pathLength="1"/>
+          <line id="part3" x1="140" y1="104" x2="114" y2="130" class="part hidden" pathLength="1"/>
+          <line id="part4" x1="140" y1="104" x2="166" y2="130" class="part hidden" pathLength="1"/>
+          <line id="part5" x1="140" y1="145" x2="117" y2="182" class="part hidden" pathLength="1"/>
+          <line id="part6" x1="140" y1="145" x2="163" y2="182" class="part hidden" pathLength="1"/>
+        </svg>
+        <div>
+          <p id="lives" class="lives"></p>
+          <p id="wrong-letters" class="hint"></p>
+        </div>
+      </div>
+      <div id="word-display"></div>
+      <div id="ceremony" class="hidden">
+        <h2 id="ceremony-title"></h2>
+        <div id="blunder-list"></div>
+        <p class="hint">Everyone throw something! The results are coming up...</p>
+        <div id="ceremony-bar"><div id="ceremony-fill"></div></div>
+      </div>
+      <div id="keyboard"></div>
+      <div id="result" class="hidden">
+        <h2 id="result-title"></h2>
+        <p id="result-text"></p>
+        <button id="again-btn" class="btn big purple">Play Again</button>
+      </div>
+    </div>
+  </section>
+
+  <aside id="side-col">
+    <div id="leaderboard" class="note blue">
+      <h2>🏆 Employee of the Month</h2>
+      <ol id="score-list"></ol>
+    </div>
+    <div id="chat" class="note green">
+      <h2>💬 Water Cooler Chat</h2>
+      <div id="chat-log"></div>
+      <div id="chat-row">
+        <input id="chat-input" type="text" maxlength="200" autocomplete="off" placeholder="Say something...">
+        <button id="chat-send" class="btn small purple">Send</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div id="impact" class="hidden"></div>
+
+<div id="end-modal" class="modal hidden">
+  <div class="modal-box">
+    <h2>Are you sure you want to end the game?</h2>
+    <div class="modal-btns">
+      <button id="end-cancel" class="btn big green">Continue Playing</button>
+      <button id="end-confirm" class="btn big red">Yes, End Game</button>
+    </div>
+  </div>
+</div>
+
+<div id="flash" class="hidden"></div>
+<div id="toast" class="toast hidden"></div>
+<!-- one temporary wrong-guess / tomato & egg attack panel (fixed, never part of the page layout) -->
+<div id="pelt-list" aria-live="polite"></div>
+<script src="avatars.js"></script>
+<script src="effects.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
